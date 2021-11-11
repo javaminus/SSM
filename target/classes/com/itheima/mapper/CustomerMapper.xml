@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.CustomerMapper">
+  <select id="findBookStoreByCustomerName" parameterType="String" resultMap="CustomerWithBookStoreResult1">
+      select c.*,b.id as bid,b.bk_name,b.bk_author,b.press,b.amount,t.number
+      from bookstore b,t_customer c,t_transition t
+      where t.bookstore_id=b.id and t.customer_id=c.id and c.username=#{username}
+  </select>
+    <select id="findIdByUsername" resultType="Integer" parameterType="String">
+        select c.id from t_customer c where c.username=#{username}
+    </select>
+    <resultMap id="CustomerWithBookStoreResult1" type="Customer">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="jobs" column="jobs"/>
+        <result property="phone" column="phone"/>
+        <collection property="bookStoreList" ofType="BookStore">
+            <id property="id" column="bid"/>
+            <result property="name" column="bk_name"/>
+            <result property="author" column="bk_author"/>
+            <result property="press" column="press"/>
+            <result property="amount" column="amount"/>
+            <collection property="customerWithBookList" ofType="CustomerWithBook">
+                <id property="customer_id" column="customer_id"/>
+                <result property="bookStore_id" column="bookStore_id"/>
+                <result property="number" column="number"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+
+</mapper>

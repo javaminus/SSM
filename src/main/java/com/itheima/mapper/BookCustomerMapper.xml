@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.BookCustomerMapper">
+    <update id="updateBookByCustomerId" parameterType="list">
+        update t_transition t,bookstore b,t_customer c
+        <set>
+            <if test="_parameter!=null">
+                t.number=number+#{param3}
+            </if>
+        </set>
+        where t.bookstore_id=#{param1} and t.customer_id=#{param2}
+    </update>
+    <insert id="insertIntoId" parameterType="CustomerWithBook">
+        <if test="customer_id!=null and bookstore_id!=null and number!=null">
+            INSERT INTO t_transition(customer_id,bookstore_id,number)
+            VALUES(#{customer_id},#{bookstore_id},#{number});
+        </if>
+    </insert>
+</mapper>

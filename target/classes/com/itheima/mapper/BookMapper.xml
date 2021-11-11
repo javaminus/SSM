@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.BookMapper">
+    <update id="addBookByName" parameterType="list">
+        update t_transition t,bookstore b,t_customer c
+        <set>
+            <if test="_parameter!=null">
+                b.amount=b.amount-#{amount}
+            </if>
+        </set>
+        where b.bk_name=#{name}
+    </update>
+    <select id="findCustomerByBookStoreName" parameterType="String" resultMap="CustomerWithBookStoreResult2">
+        select b.*,c.id as cid,c.username,c.jobs,c.phone
+        from bookstore b,t_customer c,t_transition t
+        where t.bookstore_id=b.id and t.customer_id=c.id and b.bk_name=#{name}
+    </select>
+    <select id="findAllBook" resultMap="CustomerWithBookStoreResult2">
+        select b.* from bookstore b
+    </select>
+    <select id="findBookIdByName" parameterType="String" resultType="Integer">
+        select b.id from bookStore b where b.bk_name=#{name}
+    </select>
+    <resultMap id="CustomerWithBookStoreResult2" type="BookStore">
+        <id property="name" column="bk_name"/>
+        <result property="id" column="id"/>
+        <result property="author" column="bk_author"/>
+        <result property="press" column="press"/>
+        <result property="amount" column="amount"/>
+        <collection property="customerList" ofType="Customer">
+            <id property="id" column="cid"/>
+            <result property="username" column="username"/>
+            <result property="jobs" column="jobs"/>
+            <result property="phone" column="phone"/>
+        </collection>
+    </resultMap>
+
+</mapper>
